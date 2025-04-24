@@ -3,6 +3,8 @@ package com.example.todolistapp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.media.MediaPlayer
+import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import kotlin.random.Random
 
@@ -51,9 +53,19 @@ class MainActivity : AppCompatActivity() {
         //Cria a list para guardar afazeres
         tasks = ArrayList()
 
-        //Cria an adaptador para conectar a lista de afazeres para ListView
-        adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, tasks)
+        adapter = object : ArrayAdapter<String>(this, R.layout.list_item, tasks) {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = convertView ?: layoutInflater.inflate(R.layout.list_item, parent, false)
+                val taskText = view.findViewById<TextView>(R.id.taskText)
+                taskText.text = getItem(position)
+                return view
+            }
+        }
+
         taskListView.adapter = adapter
+        /*Cria an adaptador para conectar a lista de afazeres para ListView
+        adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, tasks)
+        taskListView.adapter = adapter*/
 
         //Carrega as tarefas salvas
         loadTasks()
